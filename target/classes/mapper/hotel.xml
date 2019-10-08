@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.royal.dao.HotelDao">
+	<!-- 用户推荐的酒店 -->
+	<resultMap type="userHotel" id="userHotelMap">
+		<id property="uhId" column="uhid"></id>
+		<result property="hotelName" column="hotelname"/>
+		<result property="hotelAddress" column="hoteladdress"/>
+		<result property="scenicId" column="scenicId"/>
+		<result property="picture" column="picture"/>
+		<result property="reason" column="reason"/>
+		<result property="recommandTime" column="recommandtime"/>
+		<result property="isPass" column="isPass"/>
+		<association property="user" javaType="user">
+			<id property="userId" column="userId"/>
+			<result property="userName" column="userName"/>
+			<result property="password" column="password"/>
+			<result property="isAble" column="isAble"/>
+			<result property="authorityId" column="authorityId"/>
+			<result property="email" column="email"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="hotel" id="hotelMap">
+		<id property="hotelId" column="hotelid"/>
+		<result property="hotelName" column="hotelname"/>
+		<result property="hotelAddress" column="hoteladdress"/>
+		<result property="picture" column="picture"/>
+		
+	</resultMap>
+
+	<!-- 查找所有用户推荐酒店 -->
+	<select id="findAllUserHotel" resultMap="userHotelMap">
+		select * from user_hotel 
+		inner join user on user.userid=user_hotel.userId
+		where ispass=0
+	</select>
+	
+	<!-- 改变user_hotel中的状态 -1驳回  1通过 -->
+	<update id="updateUserHotel" parameterType="userHotel">
+		update user_hotel set ispass=#{1} where uhid=#{0} 
+	</update>
+	
+	<!-- 通过编号查找酒店 -->
+	<select id="findUserHotelById" resultMap="userHotelMap">
+		select * from user_hotel 
+		inner join user on user.userid=user_hotel.userId
+		where user_hotel.uhId=#{0}
+	</select>
+	
+	<!-- 将用户推荐的酒店加入酒店表 -->
+	<insert id="addUserHotelToHotel">
+		insert into hotel values(null,#{0},#{1},#{2},#{3},0)
+	</insert>
+
+
+	<select id="findHotelByCityAll" resultMap="hotelMap">
+		select hotelname,hoteladdress,hotel.picture from scenic inner join hotel on hotel.scenicid=scenic.scenicid where city like #{0} order by hotel.pv 
+	</select>
+	
+	<select id="findHotelByCityPage" resultMap="hotelMap">
+		select hotelname,hoteladdress,hotel.picture from scenic inner join hotel on hotel.scenicid=scenic.scenicid where city like #{0} order by hotel.pv desc limit #{1},12
+	</select>
+	
+	<select id="findHotelByScenicAll" resultMap="hotelMap">
+		select hotelname,hoteladdress,hotel.picture from scenic inner join hotel on hotel.scenicid=scenic.scenicid where scenicname like #{0} order by hotel.pv
+	</select>
+	
+	<select id="findHotelByScenicPage" resultMap="hotelMap">
+		select hotelname,hoteladdress,hotel.picture from scenic inner join hotel on hotel.scenicid=scenic.scenicid where scenicname like #{0} order by hotel.pv desc limit #{1},12
+	</select>
+	
+
+	<!-- 查询所有酒店 -->
+	<select id="findAllHotels" resultType="hotel">
+		select * from hotel order by pv desc limit #{0},10
+	</select>
+	
+	
+	<!-- 删除酒店 -->
+	<delete id="deleteHotel" >
+		delete from hotel where hotelid=#{0}
+	</delete>
+	
+	<!-- 根据酒店id查找酒店 -->
+	<select id="findHotelByHotelId" resultType="hotel">
+		select * from hotel where hotelId=#{0}
+	</select>
+	
+	<!-- 查找有多少条数据 -->
+	<select id="findHotelCount" resultType="int">
+		select count(*) from hotel
+	</select>
+	
+	<!-- 添加用户推荐酒店 -->
+	<insert id="addUserHotel">
+		insert into user_hotel values(null,#{0},#{1},#{2},#{3},#{4},#{5},#{6},0);
+	</insert>
+</mapper>

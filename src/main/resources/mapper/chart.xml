@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.royal.dao.ChartDao">
+
+	<resultMap type="chart" id="chartMap">
+		<id property="chartId" column="chartid"></id>
+		<result property="chartName" column="chartname"></result>
+		<result property="content" column="content"></result>
+		<result property="chartTime" column="charttime"></result>
+		<association property="user" javaType="user">
+			<id property="userId" column="userid"></id>
+			<result property="userName" column="username"></result>
+			<result property="isAble" column="isable"></result>
+		</association>
+		<association property="scenic" javaType="scenic">
+			<id property="scenicId" column="scenicid"></id>
+			<result property="scenicName" column="scenicname"></result>
+		</association>
+	</resultMap>
+	
+	
+	<!-- 本月 -->
+	<select id="findMonthChart" resultMap="chartMap">
+	select * from scenic inner join(
+	select
+	chartid,chart.userid,content,scenicid,charttime,username,`user`.isable
+	from chart inner join user on USER.userid=chart.userid)s
+	on
+	s.scenicid=scenic.scenicid where DATE_FORMAT(s.charttime,'%Y-%M')=DATE_FORMAT(#{date},'%Y-%M') ORDER BY
+	s.charttime desc limit #{startPage},#{rowpage}
+	</select>
+	
+	<!-- 查找本月评论的数据的行数 -->
+	
+	<select id="findMonthRowsChart" resultType="Integer">
+		select count(*) from chart where DATE_FORMAT(charttime,'%Y-%M')=DATE_FORMAT(#{date},'%Y-%M') 
+	</select>
+
+	<!-- 本周 -->
+	<select id="findWeekChart" resultMap="chartMap">
+	select * from scenic inner join(
+	select
+	chartid,chart.userid,content,scenicid,charttime,username,`user`.isable
+	from chart inner join user on USER.userid=chart.userid)s
+	on
+	s.scenicid=scenic.scenicid where week(charttime)=week(#{date}) ORDER BY
+	s.charttime desc limit #{startPage},#{rowpage}
+	</select>
+	
+	<!-- 查询本周评论行数 -->
+	<select id="findWeekRowsChart" resultType="Integer">
+		select count(*) from scenic inner join(
+	select
+	chartid,chart.userid,content,scenicid,charttime,username,`user`.isable
+	from chart inner join user on USER.userid=chart.userid)s
+	on
+	s.scenicid=scenic.scenicid where week(charttime)=week(#{date}) ORDER BY
+	s.charttime desc
+	</select>
+	
+	
+	
+	<!-- 修改评论 -->
+	<update id="updateChart">
+		update chart set content=#{1} where chartid=#{0}
+	</update>
+	
+	<!-- 查看景区评论 -->
+	<select	id="findChartByScenicId" resultMap="chartMap">
+		select * from scenic inner join(
+select chartid,chart.userid,content,scenicid,charttime,username from chart inner join user on USER.userid=chart.userid)s
+on s.scenicid=scenic.scenicid where s.scenicid=#{0} ORDER BY s.charttime desc
+	</select>
+	
+	
+	<!-- 发表评论 -->
+	<insert id="insertChart">
+		insert into chart values(null,#{chartForm.userId},#{chartForm.content},#{chartForm.scenicId},#{chartForm.chartTime})
+	</insert>
+	
+	<!-- 删除评论 -->
+	<delete id="deleteChart">
+		delete from chart where chartid=#{0}
+	</delete>
+	
+
+</mapper>

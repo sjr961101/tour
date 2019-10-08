@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration  
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  	<!-- 别名 -->
+  	<typeAliases>
+  		<typeAlias type="com.royal.pojo.User" alias="user"/>
+  		<typeAlias type="com.royal.pojo.Chart" alias="chart"/>
+  		<typeAlias type="com.royal.pojo.Scenic" alias="scenic"/>
+  		<typeAlias type="com.royal.pojo.User_Scenic" alias="userScenic"/>
+  		<typeAlias type="com.royal.pojo.Hotel" alias="hotel"/>
+  		<typeAlias type="com.royal.pojo.User_Hotel" alias="userHotel"/>
+  		<typeAlias type="com.royal.pojo.Hotel" alias="hotel"></typeAlias>
+
+  	</typeAliases>
+  	<!-- 映射文件 -->
+  	<mappers>
+  		<mapper resource="mapper/city.xml"/>
+  		<mapper resource="mapper/provience_city.xml"/>
+  		<mapper resource="mapper/Provience.xml"/>
+  		<mapper resource="mapper/user.xml"/>
+  		<mapper resource="mapper/hotel.xml"/>
+  		<mapper resource="mapper/scenic.xml"/>
+  		<mapper resource="mapper/drivindRoute.xml"/>
+  		<mapper resource="mapper/chart.xml"/>
+  	</mappers>
+</configuration>

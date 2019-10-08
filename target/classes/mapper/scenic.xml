@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.royal.dao.ScenicDao">
+	<resultMap type="userScenic" id="userScenicMap">
+		<id property="usId" column="usid"></id>
+		<result property="usName" column="usname"/>
+		<result property="scenicAddress" column="scenicaddress"/>
+		<result property="province" column="province"/>
+		<result property="city" column="city"/>
+		<result property="picture" column="picture"/>
+		<result property="reason" column="reason"/>
+		<result property="recommandTime" column="recommandtime"/>
+		<association property="user" javaType="user">
+			<result property="userName" column="userName"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="scenic" id="proMap">
+		<result property="province" column="province"/>
+	</resultMap>
+	
+	<resultMap type="scenic" id="cityMap">
+		<result property="city" column="city"/>
+	</resultMap>
+	<!-- 查找所有用户推荐景点 -->
+	<select id="findAllUserScenic" resultMap="userScenicMap">
+		select usid,userName,usname,scenicaddress,province,city,picture,reason,recommandtime 
+		from user_scenic inner join user on user.userid=user_scenic.userid where ispass=0
+	</select>
+	<!-- 根据编号查找 -->
+	<select id="findUserScenicById" resultType="userScenic">
+		select * from user_scenic where usid=#{0}
+	</select>
+	<!-- 修改核实状态 -->
+	<update id="updateUserScenic">
+		update user_scenic set ispass=#{1} where usId=#{0}
+	</update>
+	<!-- 通过时加入景点 -->
+	<insert id="addUserScenicToScenic" parameterType="userScenic">
+		insert into scenic values(null,#{usName},#{province},#{city},#{scenicAddress},#{picture},6,#{reason},0);
+	</insert>
+	
+	<!-- ************************************ -->
+	<!-- 查找所有省份 -->
+	<select id="findAllProvience" resultMap="proMap">
+		select province from scenic group by province
+	</select>
+	<!-- 根据省份查找所有城市 -->
+	<select id="findCityByPro" resultMap="cityMap">
+		select city from scenic where province=#{0} group by city 
+	</select>
+	
+	<!-- 根据城市查找景点 -->
+	<select id="findSenicByCity" resultType="scenic">
+		select * from scenic where city=#{0} order by  pv desc
+	</select> 
+	<!-- 根据分页城市查找景点 -->
+	<select id="findSenicByCityPage" resultType="scenic">
+		select * from scenic where city=#{0} order by  pv desc limit #{1},#{2} 
+	</select> 
+	<select id="findScenicById" resultType="scenic">
+		select * from scenic where scenicId=#{0} order by  pv desc
+	</select>
+	
+	<!-- 添加用户推荐景点 -->
+	<insert id="addUserScenic">
+		insert into user_scenic values(null,#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},0);
+	</insert>
+</mapper>
