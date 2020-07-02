@@ -11,7 +11,7 @@
 		<spring.version>5.1.2.RELEASE</spring.version>
 		<aspectjt.version>1.9.2</aspectjt.version>
 		<mybatis.version>3.3.0</mybatis.version>
-		<mysql.version>5.1.42</mysql.version>
+		<mysql.version>8.0.16</mysql.version>
 		<druid.version>1.0.20</druid.version>
 		<c3p0.version>0.9.5.2</c3p0.version>
 		<mybatis-spring.version>1.2.3</mybatis-spring.version>
