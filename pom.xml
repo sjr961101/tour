@@ -8,7 +8,7 @@
   <!-- 配置jar包版本 -->
 	<properties>
 		<!-- 4.3.8.RELEASE -->
-		<spring.version>5.1.2.RELEASE</spring.version>
+		<spring.version>5.2.22.RELEASE</spring.version>
 		<aspectjt.version>1.9.2</aspectjt.version>
 		<mybatis.version>3.3.0</mybatis.version>
 		<mysql.version>5.1.42</mysql.version>
