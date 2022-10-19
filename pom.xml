@@ -23,7 +23,7 @@
 		<fileupload.version>1.3.3</fileupload.version>
 		<fastjson.version>1.2.47</fastjson.version>
 		<commons-io.version>2.6</commons-io.version>
-		<jackson-version>2.9.7</jackson-version>
+		<jackson-version>2.13.4.1</jackson-version>
 		<jsp-version>2.0</jsp-version>
 	</properties>
 	<!-- 配置jar包依赖，支持子模块的访问 -->
